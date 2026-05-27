@@ -20,3 +20,22 @@
 Відкрити файл `index.js` у браузері або Node.js:
 ```bash
 node index.js
+
+## Завдання 2
+
+Функція `processProducts(products)` обробляє масив товарів.
+
+### Результат:
+- available — товари в наявності
+- totalPrice — сума цін доступних товарів
+- cheapest — найдешевший товар серед доступних
+- priceList — список товарів у форматі "Назва — ціна грн"
+
+### Приклад:
+
+```javascript
+const products = [
+  { name: "Чай", price: 50, inStock: true },
+  { name: "Кава", price: 120, inStock: false },
+  { name: "Цукор", price: 30, inStock: true }
+];
