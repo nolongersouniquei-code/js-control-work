@@ -1,11 +1,12 @@
+// ===============================
+// ЗАВДАННЯ 1
+// ===============================
 function summarizeNumbers(numbers) {
-  // 1. Базові значення
   let count = 0;
   let sum = 0;
   let evenCount = 0;
   let max = undefined;
 
-  // 2. Перевірка на порожній масив
   if (numbers.length === 0) {
     return {
       count: 0,
@@ -16,55 +17,31 @@ function summarizeNumbers(numbers) {
     };
   }
 
-  // 3. Обчислення через цикл
   for (let i = 0; i < numbers.length; i++) {
     const num = numbers[i];
 
     count++;
     sum += num;
 
-    if (num % 2 === 0) {
-      evenCount++;
-    }
+    if (num % 2 === 0) evenCount++;
 
     if (max === undefined || num > max) {
       max = num;
     }
   }
 
-  // 4. Визначення категорії
-  let category;
-  if (sum > 0) {
-    category = "positive";
-  } else {
-    category = "non-positive";
-  }
+  const category = sum > 0 ? "positive" : "non-positive";
 
-  // 5. Повернення результату
-  return {
-    count,
-    sum,
-    evenCount,
-    max,
-    category
-  };
+  return { count, sum, evenCount, max, category };
 }
 
-// Приклади
-console.log(summarizeNumbers([4, 7, 2, 9]));
-// { count: 4, sum: 22, evenCount: 2, max: 9, category: "positive" }
 
-console.log(summarizeNumbers([]));
-// { count: 0, sum: 0, evenCount: 0, max: undefined, category: "empty" }
-
+// ===============================
+// ЗАВДАННЯ 2
+// ===============================
 function processProducts(products) {
-  // товари в наявності
   const available = [];
-
-  // список рядків "Назва — ціна грн"
-  const priceList = products.map(product => {
-    return `${product.name} — ${product.price} грн`;
-  });
+  const priceList = products.map(p => `${p.name} — ${p.price} грн`);
 
   let totalPrice = 0;
   let cheapest = null;
@@ -76,7 +53,7 @@ function processProducts(products) {
       available.push(product.name);
       totalPrice += product.price;
 
-      if (cheapest === null || product.price < cheapest.price) {
+      if (!cheapest || product.price < cheapest.price) {
         cheapest = product;
       }
     }
@@ -90,61 +67,36 @@ function processProducts(products) {
   };
 }
 
-// приклад
-const products = [
-  { name: "Чай", price: 50, inStock: true },
-  { name: "Кава", price: 120, inStock: false },
-  { name: "Цукор", price: 30, inStock: true }
-];
 
-console.log(processProducts(products));
-
+// ===============================
+// ЗАВДАННЯ 3
+// ===============================
 function createApiClient(baseUrl) {
-  // замикання: приватні змінні
   let requestCount = 0;
 
   return {
-    // async метод GET
     async get(path) {
       try {
-        const response = await fetch(baseUrl + path);
-
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-
-        const data = await response.json();
-
-        // збільшуємо лічильник тільки при запиті
+        const res = await fetch(baseUrl + path);
+        const data = await res.json();
         requestCount++;
-
         return data;
-      } catch (error) {
+      } catch (e) {
         requestCount++;
         return { error: "Запит не вдався" };
       }
     },
 
-    // повертає кількість запитів
     getRequestCount() {
       return requestCount;
     }
   };
 }
 
-// приклад використання
-(async () => {
-  const api = createApiClient("https://jsonplaceholder.typicode.com");
 
-  const user = await api.get("/users/1");
-  console.log(user);
-
-  const posts = await api.get("/posts");
-  console.log(posts);
-
-  console.log(api.getRequestCount()); // 2
-})();
-
+// ===============================
+// ЗАВДАННЯ 4
+// ===============================
 class Task {
   constructor(id, text) {
     this.id = id;
@@ -164,16 +116,11 @@ class TodoList {
   }
 
   add(text) {
-    const task = new Task(this.currentId++, text);
-    this.tasks.push(task);
+    this.tasks.push(new Task(this.currentId++, text));
   }
 
   remove(id) {
-    this.tasks = this.tasks.filter(task => task.id !== id);
-  }
-
-  getActive() {
-    return this.tasks.filter(task => !task.done);
+    this.tasks = this.tasks.filter(t => t.id !== id);
   }
 
   toggleTask(id) {
@@ -182,20 +129,18 @@ class TodoList {
   }
 }
 
-// ініціалізація
+// DOM
 const todo = new TodoList();
 
 const input = document.getElementById("taskInput");
 const btn = document.getElementById("addBtn");
 const list = document.getElementById("taskList");
 
-// рендер функція
 function render() {
   list.innerHTML = "";
 
   todo.tasks.forEach(task => {
     const li = document.createElement("li");
-
     li.textContent = task.text;
     li.dataset.id = task.id;
 
@@ -207,10 +152,8 @@ function render() {
   });
 }
 
-// додати задачу
 btn.addEventListener("click", () => {
   const text = input.value.trim();
-
   if (text) {
     todo.add(text);
     input.value = "";
@@ -218,10 +161,8 @@ btn.addEventListener("click", () => {
   }
 });
 
-// делегування подій (клік по списку)
 list.addEventListener("click", (e) => {
   const id = Number(e.target.dataset.id);
-
   if (id) {
     todo.toggleTask(id);
     render();
