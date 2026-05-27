@@ -144,3 +144,86 @@ function createApiClient(baseUrl) {
 
   console.log(api.getRequestCount()); // 2
 })();
+
+class Task {
+  constructor(id, text) {
+    this.id = id;
+    this.text = text;
+    this.done = false;
+  }
+
+  toggle() {
+    this.done = !this.done;
+  }
+}
+
+class TodoList {
+  constructor() {
+    this.tasks = [];
+    this.currentId = 1;
+  }
+
+  add(text) {
+    const task = new Task(this.currentId++, text);
+    this.tasks.push(task);
+  }
+
+  remove(id) {
+    this.tasks = this.tasks.filter(task => task.id !== id);
+  }
+
+  getActive() {
+    return this.tasks.filter(task => !task.done);
+  }
+
+  toggleTask(id) {
+    const task = this.tasks.find(t => t.id === id);
+    if (task) task.toggle();
+  }
+}
+
+// ініціалізація
+const todo = new TodoList();
+
+const input = document.getElementById("taskInput");
+const btn = document.getElementById("addBtn");
+const list = document.getElementById("taskList");
+
+// рендер функція
+function render() {
+  list.innerHTML = "";
+
+  todo.tasks.forEach(task => {
+    const li = document.createElement("li");
+
+    li.textContent = task.text;
+    li.dataset.id = task.id;
+
+    if (task.done) {
+      li.style.textDecoration = "line-through";
+    }
+
+    list.appendChild(li);
+  });
+}
+
+// додати задачу
+btn.addEventListener("click", () => {
+  const text = input.value.trim();
+
+  if (text) {
+    todo.add(text);
+    input.value = "";
+    render();
+  }
+});
+
+// делегування подій (клік по списку)
+list.addEventListener("click", (e) => {
+  const id = Number(e.target.dataset.id);
+
+  if (id) {
+    todo.toggleTask(id);
+    render();
+  }
+});
