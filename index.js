@@ -99,3 +99,48 @@ const products = [
 
 console.log(processProducts(products));
 
+function createApiClient(baseUrl) {
+  // замикання: приватні змінні
+  let requestCount = 0;
+
+  return {
+    // async метод GET
+    async get(path) {
+      try {
+        const response = await fetch(baseUrl + path);
+
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+
+        const data = await response.json();
+
+        // збільшуємо лічильник тільки при запиті
+        requestCount++;
+
+        return data;
+      } catch (error) {
+        requestCount++;
+        return { error: "Запит не вдався" };
+      }
+    },
+
+    // повертає кількість запитів
+    getRequestCount() {
+      return requestCount;
+    }
+  };
+}
+
+// приклад використання
+(async () => {
+  const api = createApiClient("https://jsonplaceholder.typicode.com");
+
+  const user = await api.get("/users/1");
+  console.log(user);
+
+  const posts = await api.get("/posts");
+  console.log(posts);
+
+  console.log(api.getRequestCount()); // 2
+})();
