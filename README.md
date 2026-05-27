@@ -39,3 +39,20 @@ const products = [
   { name: "Кава", price: 120, inStock: false },
   { name: "Цукор", price: 30, inStock: true }
 ];
+
+## Завдання 3
+
+Реалізовано API-клієнт з використанням:
+
+- замикання (closure)
+- async/await
+- try/catch
+- fetch API
+
+### Функціонал:
+- get(path) — виконує запит та повертає JSON
+- getRequestCount() — повертає кількість запитів
+
+### Особливості:
+- приватний лічильник запитів через closure
+- обробка помилок через try/catch
