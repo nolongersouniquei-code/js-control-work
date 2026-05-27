@@ -56,3 +56,46 @@ console.log(summarizeNumbers([4, 7, 2, 9]));
 
 console.log(summarizeNumbers([]));
 // { count: 0, sum: 0, evenCount: 0, max: undefined, category: "empty" }
+
+function processProducts(products) {
+  // товари в наявності
+  const available = [];
+
+  // список рядків "Назва — ціна грн"
+  const priceList = products.map(product => {
+    return `${product.name} — ${product.price} грн`;
+  });
+
+  let totalPrice = 0;
+  let cheapest = null;
+
+  for (let i = 0; i < products.length; i++) {
+    const product = products[i];
+
+    if (product.inStock) {
+      available.push(product.name);
+      totalPrice += product.price;
+
+      if (cheapest === null || product.price < cheapest.price) {
+        cheapest = product;
+      }
+    }
+  }
+
+  return {
+    available,
+    totalPrice,
+    cheapest: cheapest ? cheapest.name : undefined,
+    priceList
+  };
+}
+
+// приклад
+const products = [
+  { name: "Чай", price: 50, inStock: true },
+  { name: "Кава", price: 120, inStock: false },
+  { name: "Цукор", price: 30, inStock: true }
+];
+
+console.log(processProducts(products));
+
